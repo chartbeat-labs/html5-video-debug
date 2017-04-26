@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+      // Chartbeat config
+      var config = window._sf_async_config = {};
+      config.domain = 'vidtest.chartbeat.com';
+      config.uid = 1;
+
+      // Load Chartbeat Video
+      (function() {
+        function loadChartbeat() {
+            window._sf_endpt = (new Date()).getTime();
+            var e = document.createElement('script');
+            e.setAttribute('language', 'javascript');
+            e.setAttribute('type', 'text/javascript');
+            e.setAttribute('src', '//static.chartbeat.com/js/chartbeat_video.js');
+            document.body.appendChild(e);
+        }
+        var oldonload = window.onload;
+        window.onload = (typeof window.onload != 'function') ?
+            loadChartbeat : function() {
+                oldonload();
+                loadChartbeat();
+            };
+      })();
+    </script>
+  </head>
+  <body>
+    <video class="video-1" src="media/thefourfives-720p_0_12.mp4" controls="true" playsinline="true" style="width: 100%" poster="media/poster.jpg"></video>
+    <button class="play-video" style="font-size: 16px; line-height: 20px; padding: 10px 20px;">Play</button>
+
+    <script>
+      (function() {
+        // A function that calls play() on the video.
+        function playTheVideoProgramatically() {
+          var video1 = document.querySelector('.video-1');
+          video1.play()
+            .then(function() {
+              console.log('Video played successfully!');
+            })
+            .catch(function(error) {
+              console.log('Video errored while trying to play: ' + error);
+            });
+        }
+
+        var btn = document.querySelector('.play-video');
+        btn.addEventListener('click', function() {
+          // This one works -- immediately plays video in same event handler
+          playTheVideoProgramatically();
+
+          // The below doesn't work, presumably because it sets a timeout and
+          // calls play() in a later event handler triggered by the timer.
+          // setTimeout(playTheVideoProgramatically, 0);
+        }, false);
+
+
+        // This has no effect, but was (surprisingly) causing a problem on the
+        // client page, even though it appears to do nothing.
+        setInterval(function() {}, 50);
+      })();
+    </script>
+  </body>
+</html>
